@@ -1,0 +1,107 @@
+body{
+margin:0;
+font-family: "Segoe UI", Arial;
+background:#f5f6fb;
+color:#333;
+}
+
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 80px;
+background:white;
+}
+
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#2a2a7c;
+}
+
+.logo span{
+color:#5c6cff;
+}
+
+
+.menu a{
+margin:0 15px;
+text-decoration:none;
+color:#333;
+font-size:14px;
+}
+
+.solucoes{
+color:#ff4a4a;
+}
+
+
+.menu-direita{
+display:flex;
+align-items:center;
+gap:20px;
+}
+
+.btn-teste{
+background:#2d2d82;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+font-size:14px;
+cursor:pointer;
+}
+
+.entrar{
+text-decoration:none;
+color:#333;
+}
+
+
+/* HERO */
+
+.hero{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:80px;
+gap:60px;
+}
+
+.hero-texto{
+max-width:550px;
+}
+
+.hero-texto h1{
+font-size:64px;
+color:#2a2a7c;
+margin-bottom:30px;
+}
+
+.hero-texto p{
+font-size:17px;
+line-height:1.7;
+color:#555;
+margin-bottom:20px;
+}
+
+
+.hero-img img{
+width:600px;
+border-radius:6px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+.footer{
+background:#1f2a7c;
+color:white;
+text-align:center;
+padding:25px;
+margin-top:80px;
+font-size:14px;
+letter-spacing:0.5px;
+}
