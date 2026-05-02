@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home | FatureMais</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page">
+  <header class="app-header">
+    <a class="app-brand" href="home.html">Savir Sistemas</a>
+
+    <nav class="app-nav">
+      <a href="#inicio">Inicio</a>
+      <div class="app-nav-dropdown">
+        <button class="app-nav-trigger" type="button">Cadastros</button>
+        <div class="app-nav-menu">
+          <a href="usuarios.html">Usuarios</a>
+        </div>
+      </div>
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Servicos</a>
+      <a href="#contato">Contato</a>
+      <button id="logoutButton" class="app-nav-link-button" type="button">Sair</button>
+    </nav>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="welcome-card" id="inicio">
+      <span class="eyebrow">Painel inicial</span>
+      <h1>Seu acesso esta ativo.</h1>
+      <p id="userEmail">
+        Estamos carregando os dados da sua sessao para continuar a navegacao.
+      </p>
+      <div class="dashboard-user-inline">
+        <span class="dashboard-user-label">Usuario logado</span>
+        <strong id="userName">Carregando...</strong>
+      </div>
+    </section>
+
+    <section class="dashboard-grid" id="servicos">
+      <article class="dashboard-card">
+        <span>Status</span>
+        <strong>Integracao concluida</strong>
+        <p>Cadastro e login ja estao conectados ao banco com persistencia de sessao.</p>
+      </article>
+      <article class="dashboard-card">
+        <span>Proximo passo</span>
+        <strong>Usuarios - CRUD</strong>
+        <p>O menu Cadastros ja possui a entrada de Usuarios com listagem, inclusao, edicao, exclusao e impressao.</p>
+      </article>
+      <article class="dashboard-card">
+        <span>Estrutura</span>
+        <strong>Frontend + API</strong>
+        <p>O projeto esta organizado para evoluir os demais modulos sem perder a fidelidade ao DER.</p>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="dashboard-card" id="sobre">
+        <span>Sobre</span>
+        <strong>Sprint de usuarios</strong>
+        <p>O sistema agora respeita o modelo relacional com segregacao por schemas e expande o CRUD dentro da area autenticada.</p>
+      </article>
+      <article class="dashboard-card" id="contato">
+        <span>Contato</span>
+        <strong>Suporte interno</strong>
+        <p>Use esta estrutura como base para as proximas sprints de pessoas, tipos de titulo e contas a receber.</p>
+      </article>
+    </section>
+  </main>
+
+  <script src="shared.js"></script>
+  <script src="home.js"></script>
+</body>
+</html>

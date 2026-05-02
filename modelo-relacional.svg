@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="820" viewBox="0 0 1280 820">
+  <defs>
+    <style>
+      .bg { fill: #f7f5ef; }
+      .shadow { fill: #d8d2c5; opacity: 0.35; }
+      .table { fill: #ffffff; stroke: #5a5a5a; stroke-width: 2; }
+      .header { fill: #efe8d8; stroke: #5a5a5a; stroke-width: 2; }
+      .row { stroke: #d5d5d5; stroke-width: 1; }
+      .schema { font: 18px 'Segoe UI', Arial, sans-serif; fill: #444; }
+      .title { font: bold 22px 'Segoe UI', Arial, sans-serif; fill: #222; }
+      .text { font: 18px 'Segoe UI', Arial, sans-serif; fill: #222; }
+      .muted { font: 17px 'Segoe UI', Arial, sans-serif; fill: #555; }
+      .key { font: bold 18px 'Segoe UI Symbol', 'Segoe UI', Arial, sans-serif; fill: #c7a100; }
+      .fk { font: bold 18px 'Segoe UI Symbol', 'Segoe UI', Arial, sans-serif; fill: #1a9a57; }
+      .line { stroke: #7b7b7b; stroke-width: 3; fill: none; }
+      .label { font: 15px 'Segoe UI', Arial, sans-serif; fill: #666; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1280" height="820"/>
+
+  <g>
+    <rect class="shadow" x="54" y="57" width="430" height="230" rx="10"/>
+    <rect class="table" x="45" y="48" width="430" height="230" rx="10"/>
+    <rect class="header" x="45" y="48" width="430" height="44" rx="10"/>
+    <text class="schema" x="70" y="76">seguranca</text>
+    <text class="title" x="215" y="76">tb_usuarios</text>
+    <line class="row" x1="45" y1="92" x2="475" y2="92"/>
+    <text class="key" x="62" y="126">🔑</text>
+    <text class="text" x="92" y="126">usuario_id</text>
+    <text class="muted" x="260" y="126">int(10)</text>
+    <text class="text" x="395" y="126">PK</text>
+
+    <line class="row" x1="45" y1="138" x2="475" y2="138"/>
+    <text class="text" x="92" y="170">nome</text>
+    <text class="muted" x="260" y="170">varchar(200)</text>
+    <text class="text" x="402" y="170">NN</text>
+
+    <line class="row" x1="45" y1="182" x2="475" y2="182"/>
+    <text class="text" x="92" y="214">login</text>
+    <text class="muted" x="260" y="214">varchar(50)</text>
+    <text class="text" x="392" y="214">NN U</text>
+
+    <line class="row" x1="45" y1="226" x2="475" y2="226"/>
+    <text class="text" x="92" y="258">senha</text>
+    <text class="muted" x="260" y="258">varchar(255)</text>
+    <text class="text" x="402" y="258">NN</text>
+
+    <line class="row" x1="45" y1="270" x2="475" y2="270"/>
+    <text class="text" x="92" y="302">atualizado_em</text>
+    <text class="muted" x="260" y="302">timestamp</text>
+    <text class="text" x="402" y="302">NN</text>
+
+    <line class="row" x1="45" y1="314" x2="475" y2="314"/>
+    <text class="fk" x="62" y="346">↗</text>
+    <text class="text" x="92" y="346">atualizado_por</text>
+    <text class="muted" x="260" y="346">int(10)</text>
+    <text class="text" x="412" y="346">FK</text>
+  </g>
+
+  <g>
+    <rect class="shadow" x="760" y="57" width="310" height="116" rx="10"/>
+    <rect class="table" x="751" y="48" width="310" height="116" rx="10"/>
+    <rect class="header" x="751" y="48" width="310" height="44" rx="10"/>
+    <text class="schema" x="865" y="76">cadastro</text>
+    <text class="title" x="838" y="76">tb_pessoa_tipo</text>
+    <line class="row" x1="751" y1="92" x2="1061" y2="92"/>
+    <text class="key" x="768" y="126">🔑</text>
+    <text class="text" x="798" y="126">pessoa_tipo_id</text>
+    <text class="muted" x="963" y="126">int(10)</text>
+    <text class="text" x="1008" y="126">PK</text>
+
+    <line class="row" x1="751" y1="138" x2="1061" y2="138"/>
+    <text class="text" x="798" y="162">nome</text>
+    <text class="muted" x="963" y="162">varchar(200)</text>
+    <text class="text" x="1000" y="162">NN U</text>
+  </g>
+
+  <g>
+    <rect class="shadow" x="760" y="203" width="390" height="268" rx="10"/>
+    <rect class="table" x="751" y="194" width="390" height="268" rx="10"/>
+    <rect class="header" x="751" y="194" width="390" height="44" rx="10"/>
+    <text class="schema" x="873" y="222">cadastro</text>
+    <text class="title" x="902" y="222">tb_pessoas</text>
+    <line class="row" x1="751" y1="238" x2="1141" y2="238"/>
+    <text class="key" x="768" y="272">🔑</text>
+    <text class="text" x="798" y="272">pessoa_id</text>
+    <text class="muted" x="976" y="272">int(11)</text>
+    <text class="text" x="1038" y="272">PK</text>
+
+    <line class="row" x1="751" y1="284" x2="1141" y2="284"/>
+    <text class="text" x="798" y="316">nome</text>
+    <text class="muted" x="976" y="316">varchar(200)</text>
+    <text class="text" x="1050" y="316">NN</text>
+
+    <line class="row" x1="751" y1="328" x2="1141" y2="328"/>
+    <text class="text" x="798" y="360">cpf</text>
+    <text class="muted" x="976" y="360">varchar(14)</text>
+    <text class="text" x="1038" y="360">NN U</text>
+
+    <line class="row" x1="751" y1="372" x2="1141" y2="372"/>
+    <text class="text" x="798" y="404">nascimento</text>
+    <text class="muted" x="976" y="404">date</text>
+    <text class="text" x="1050" y="404">NN</text>
+
+    <line class="row" x1="751" y1="416" x2="1141" y2="416"/>
+    <text class="text" x="798" y="448">telefone</text>
+    <text class="muted" x="976" y="448">varchar(20)</text>
+    <text class="text" x="1050" y="448">NN</text>
+
+    <line class="row" x1="751" y1="460" x2="1141" y2="460"/>
+    <text class="fk" x="768" y="492">↗</text>
+    <text class="text" x="798" y="492">pessoa_tipo_id</text>
+    <text class="muted" x="976" y="492">int(10)</text>
+    <text class="text" x="1060" y="492">FK</text>
+
+    <line class="row" x1="751" y1="504" x2="1141" y2="504"/>
+    <text class="fk" x="768" y="536">↗</text>
+    <text class="text" x="798" y="536">atualizado_por</text>
+    <text class="muted" x="976" y="536">int(10)</text>
+    <text class="text" x="1060" y="536">FK</text>
+
+    <line class="row" x1="751" y1="548" x2="1141" y2="548"/>
+    <text class="text" x="798" y="580">atualizado_em</text>
+    <text class="muted" x="976" y="580">timestamp</text>
+    <text class="text" x="1050" y="580">NN</text>
+  </g>
+
+  <g>
+    <rect class="shadow" x="815" y="598" width="320" height="116" rx="10"/>
+    <rect class="table" x="806" y="589" width="320" height="116" rx="10"/>
+    <rect class="header" x="806" y="589" width="320" height="44" rx="10"/>
+    <text class="schema" x="922" y="617">financeiro</text>
+    <text class="title" x="920" y="617">tb_tipo_titulo</text>
+    <line class="row" x1="806" y1="633" x2="1126" y2="633"/>
+    <text class="key" x="823" y="667">🔑</text>
+    <text class="text" x="853" y="667">tipo_titulo_id</text>
+    <text class="muted" x="1010" y="667">int(11)</text>
+    <text class="text" x="1070" y="667">PK</text>
+
+    <line class="row" x1="806" y1="679" x2="1126" y2="679"/>
+    <text class="text" x="853" y="703">descricao</text>
+    <text class="muted" x="1010" y="703">varchar(100)</text>
+    <text class="text" x="1058" y="703">NN U</text>
+  </g>
+
+  <g>
+    <rect class="shadow" x="45" y="525" width="445" height="268" rx="10"/>
+    <rect class="table" x="36" y="516" width="445" height="268" rx="10"/>
+    <rect class="header" x="36" y="516" width="445" height="44" rx="10"/>
+    <text class="schema" x="157" y="544">financeiro</text>
+    <text class="title" x="154" y="544">tb_contas_receber</text>
+    <line class="row" x1="36" y1="560" x2="481" y2="560"/>
+    <text class="key" x="53" y="594">🔑</text>
+    <text class="text" x="83" y="594">contas_receber_id</text>
+    <text class="muted" x="304" y="594">int(10)</text>
+    <text class="text" x="392" y="594">PK</text>
+
+    <line class="row" x1="36" y1="606" x2="481" y2="606"/>
+    <text class="fk" x="53" y="638">↗</text>
+    <text class="text" x="83" y="638">fornecedor_id</text>
+    <text class="muted" x="304" y="638">int(10)</text>
+    <text class="text" x="406" y="638">FK</text>
+
+    <line class="row" x1="36" y1="650" x2="481" y2="650"/>
+    <text class="text" x="83" y="682">valor</text>
+    <text class="muted" x="304" y="682">decimal(10,2)</text>
+    <text class="text" x="396" y="682">NN</text>
+
+    <line class="row" x1="36" y1="694" x2="481" y2="694"/>
+    <text class="text" x="83" y="726">data_vencimento</text>
+    <text class="muted" x="304" y="726">date</text>
+    <text class="text" x="396" y="726">NN</text>
+
+    <line class="row" x1="36" y1="738" x2="481" y2="738"/>
+    <text class="text" x="83" y="770">data_pagamento</text>
+    <text class="muted" x="304" y="770">date</text>
+    <text class="text" x="396" y="770">NULL</text>
+  </g>
+
+  <g>
+    <rect class="shadow" x="500" y="525" width="270" height="178" rx="10"/>
+    <rect class="table" x="491" y="516" width="270" height="178" rx="10"/>
+    <rect class="header" x="491" y="516" width="270" height="44" rx="10"/>
+    <text class="schema" x="581" y="544">financeiro</text>
+    <text class="title" x="570" y="544">campos FK</text>
+    <line class="row" x1="491" y1="560" x2="761" y2="560"/>
+    <text class="fk" x="508" y="594">↗</text>
+    <text class="text" x="538" y="594">tipo_titulo_id</text>
+    <text class="muted" x="650" y="594">int(11)</text>
+    <text class="text" x="704" y="594">FK</text>
+
+    <line class="row" x1="491" y1="606" x2="761" y2="606"/>
+    <text class="fk" x="508" y="638">↗</text>
+    <text class="text" x="538" y="638">atualizado_por</text>
+    <text class="muted" x="650" y="638">int(10)</text>
+    <text class="text" x="704" y="638">FK</text>
+
+    <line class="row" x1="491" y1="650" x2="761" y2="650"/>
+    <text class="text" x="538" y="682">atualizado_em</text>
+    <text class="muted" x="650" y="682">timestamp</text>
+    <text class="text" x="708" y="682">NN</text>
+  </g>
+
+  <path class="line" d="M 475 160 C 605 160, 640 120, 751 120"/>
+  <circle cx="475" cy="160" r="6" fill="#7b7b7b"/>
+  <circle cx="751" cy="120" r="6" fill="#7b7b7b"/>
+
+  <path class="line" d="M 475 340 C 640 340, 615 360, 751 360"/>
+  <circle cx="475" cy="340" r="6" fill="#7b7b7b"/>
+  <circle cx="751" cy="360" r="6" fill="#7b7b7b"/>
+
+  <path class="line" d="M 906 164 C 906 176, 906 182, 906 194"/>
+  <circle cx="906" cy="164" r="6" fill="#7b7b7b"/>
+  <circle cx="906" cy="194" r="6" fill="#7b7b7b"/>
+
+  <path class="line" d="M 1048 589 C 1048 546, 770 594, 761 594"/>
+  <circle cx="1048" cy="589" r="6" fill="#7b7b7b"/>
+  <circle cx="761" cy="594" r="6" fill="#7b7b7b"/>
+
+  <path class="line" d="M 751 405 C 640 405, 580 638, 481 638"/>
+  <circle cx="751" cy="405" r="6" fill="#7b7b7b"/>
+  <circle cx="481" cy="638" r="6" fill="#7b7b7b"/>
+
+  <text class="label" x="579" y="140">atualizado_por</text>
+  <text class="label" x="585" y="325">atualizado_por</text>
+  <text class="label" x="924" y="184">pessoa_tipo_id</text>
+  <text class="label" x="905" y="560">tipo_titulo_id</text>
+  <text class="label" x="585" y="500">fornecedor_id</text>
+</svg>
