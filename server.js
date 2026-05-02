@@ -78,11 +78,33 @@ function requireEnv(name) {
   return value;
 }
 
-const dbHost = isRailway ? requireEnv("DB_HOST") : process.env.DB_HOST || "127.0.0.1";
-const dbPort = isRailway ? Number(requireEnv("DB_PORT")) : Number(process.env.DB_PORT || 3306);
-const dbUser = isRailway ? requireEnv("DB_USER") : process.env.DB_USER || "root";
-const dbPassword = isRailway ? requireEnv("DB_PASSWORD") : process.env.DB_PASSWORD || "";
-const dbName = process.env.DB_NAME || "sistema_contas_pagar";
+function getFirstEnv(...names) {
+  for (const name of names) {
+    const value = process.env[name]?.trim();
+
+    if (value) {
+      return value;
+    }
+  }
+
+  return "";
+}
+
+function requireAnyEnv(...names) {
+  const value = getFirstEnv(...names);
+
+  if (!value) {
+    throw new Error(`Variavel de ambiente obrigatoria nao definida: ${names.join(" ou ")}`);
+  }
+
+  return value;
+}
+
+const dbHost = isRailway ? requireAnyEnv("DB_HOST", "MYSQLHOST") : getFirstEnv("DB_HOST") || "127.0.0.1";
+const dbPort = isRailway ? Number(requireAnyEnv("DB_PORT", "MYSQLPORT")) : Number(getFirstEnv("DB_PORT") || 3306);
+const dbUser = isRailway ? requireAnyEnv("DB_USER", "MYSQLUSER") : getFirstEnv("DB_USER") || "root";
+const dbPassword = isRailway ? requireAnyEnv("DB_PASSWORD", "MYSQLPASSWORD") : getFirstEnv("DB_PASSWORD");
+const dbName = getFirstEnv("DB_NAME", "MYSQLDATABASE") || "sistema_contas_pagar";
 const authSecret = process.env.AUTH_SECRET || `${dbUser}:${dbPassword}:${dbHost}`;
 
 const dbConfig = {
