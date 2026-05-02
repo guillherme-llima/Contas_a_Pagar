@@ -356,47 +356,6 @@ input {
   border-radius: 20px;
 }
 
-@media (max-width: 980px) {
-  .site-header,
-  .dashboard-header,
-  .hero-actions,
-  .header-actions,
-  .site-nav,
-  .dashboard-user,
-  .auth-badge-list {
-    flex-wrap: wrap;
-  }
-
-  .hero-section,
-  .auth-layout,
-  .feature-section,
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-highlights {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .site-header,
-  .dashboard-header {
-    align-items: flex-start;
-  }
-
-  .auth-card,
-  .welcome-card,
-  .feature-card,
-  .hero-card {
-    padding: 24px;
-  }
-
-  .mini-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .app-header {
   display: flex;
   align-items: center;
@@ -692,16 +651,47 @@ input {
 }
 
 @media (max-width: 980px) {
+  .site-header,
+  .dashboard-header,
+  .hero-actions,
+  .header-actions,
+  .site-nav,
+  .dashboard-user,
+  .auth-badge-list,
   .app-header,
   .app-nav,
   .users-shell-header {
     flex-wrap: wrap;
   }
+
+  .hero-section,
+  .auth-layout,
+  .feature-section,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-highlights {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
+  .site-header,
+  .dashboard-header,
   .app-header {
     align-items: flex-start;
+  }
+
+  .auth-card,
+  .welcome-card,
+  .feature-card,
+  .hero-card {
+    padding: 24px;
+  }
+
+  .mini-grid {
+    grid-template-columns: 1fr;
   }
 
   .app-brand,
