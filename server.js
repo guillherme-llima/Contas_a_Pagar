@@ -104,7 +104,7 @@ const dbHost = isRailway ? requireAnyEnv("DB_HOST", "MYSQLHOST") : getFirstEnv("
 const dbPort = isRailway ? Number(requireAnyEnv("DB_PORT", "MYSQLPORT")) : Number(getFirstEnv("DB_PORT") || 3306);
 const dbUser = isRailway ? requireAnyEnv("DB_USER", "MYSQLUSER") : getFirstEnv("DB_USER") || "root";
 const dbPassword = isRailway ? requireAnyEnv("DB_PASSWORD", "MYSQLPASSWORD") : getFirstEnv("DB_PASSWORD");
-const dbName = getFirstEnv("DB_NAME", "MYSQLDATABASE") || "contas_a_pagar";
+const dbName = "contas_a_pagar";
 const authSecret = process.env.AUTH_SECRET || `${dbUser}:${dbPassword}:${dbHost}`;
 
 const dbConfig = {
@@ -135,14 +135,6 @@ const tableNames = {
 
 function getMainUserTable() {
   return `\`${dbName}\`.\`${tableNames.usuarios}\``;
-}
-
-function getCompatUserTable() {
-  return `\`${dbName}\`.\`tbUsuarios\``;
-}
-
-function getLegacyUsersTable() {
-  return `\`${dbName}\`.\`users\``;
 }
 
 function getSchemaStatements() {
@@ -260,126 +252,6 @@ async function initializeDatabase() {
   }
 
   await pool.query(`DROP TABLE IF EXISTS \`${dbName}\`.\`tbSessoes\``);
-
-  await synchronizeAuthTables();
-}
-
-async function tableExists(schema, table) {
-  const [userTables] = await pool.query(
-    `
-      SELECT COUNT(*) AS total
-      FROM information_schema.tables
-      WHERE table_schema = ?
-        AND table_name = ?
-    `,
-    [schema, table]
-  );
-
-  return Number(userTables[0]?.total || 0) > 0;
-}
-
-async function synchronizeAuthTables() {
-  const hasLegacyUsers = await tableExists(dbName, "users");
-  const hasCompatUsers = await tableExists(dbName, "tbUsuarios");
-
-  if (hasLegacyUsers) {
-    await migrateLegacyAuthData();
-  }
-
-  if (hasCompatUsers && getCompatUserTable() !== getMainUserTable()) {
-    await syncMainUsersToCompatTable();
-  }
-
-  if (hasLegacyUsers) {
-    await syncMainUsersToLegacyUsers();
-  }
-}
-
-async function migrateLegacyAuthData() {
-  if (!(await tableExists(dbName, "users"))) {
-    return;
-  }
-
-  const [legacyUsers] = await pool.query(`
-    SELECT id, nome, email, senha_hash, criado_em
-    FROM ${getLegacyUsersTable()}
-    ORDER BY id
-  `);
-
-  for (const legacyUser of legacyUsers) {
-    const [existingUsers] = await pool.query(
-      `SELECT usuario_id FROM ${getMainUserTable()} WHERE login = ? LIMIT 1`,
-      [legacyUser.email]
-    );
-
-    if (existingUsers.length > 0) {
-      continue;
-    }
-
-    const [insertResult] = await pool.query(
-      `
-        INSERT INTO ${getMainUserTable()} (nome, login, senha, atualizado_por)
-        VALUES (?, ?, ?, NULL)
-      `,
-      [legacyUser.nome, legacyUser.email, legacyUser.senha_hash]
-    );
-
-    await pool.query(
-      `
-        UPDATE ${getMainUserTable()}
-        SET atualizado_por = ?, atualizado_em = ?
-        WHERE usuario_id = ?
-      `,
-      [insertResult.insertId, legacyUser.criado_em, insertResult.insertId]
-    );
-  }
-}
-
-async function syncMainUsersToCompatTable() {
-  const [mainUsers] = await pool.query(`
-    SELECT usuario_id, nome, login, senha, atualizado_em, atualizado_por
-    FROM ${getMainUserTable()}
-    ORDER BY usuario_id
-  `);
-
-  for (const user of mainUsers) {
-    await pool.query(
-      `
-        INSERT INTO ${getCompatUserTable()} (usuario_id, nome, login, senha, atualizado_em, atualizado_por)
-        VALUES (?, ?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-          nome = VALUES(nome),
-          login = VALUES(login),
-          senha = VALUES(senha),
-          atualizado_em = VALUES(atualizado_em),
-          atualizado_por = VALUES(atualizado_por)
-      `,
-      [user.usuario_id, user.nome, user.login, user.senha, user.atualizado_em, user.atualizado_por]
-    );
-  }
-}
-
-async function syncMainUsersToLegacyUsers() {
-  const [mainUsers] = await pool.query(`
-    SELECT usuario_id, nome, login, senha, atualizado_em
-    FROM ${getMainUserTable()}
-    ORDER BY usuario_id
-  `);
-
-  for (const user of mainUsers) {
-    await pool.query(
-      `
-        INSERT INTO ${getLegacyUsersTable()} (id, nome, email, senha_hash, criado_em)
-        VALUES (?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-          nome = VALUES(nome),
-          email = VALUES(email),
-          senha_hash = VALUES(senha_hash),
-          criado_em = VALUES(criado_em)
-      `,
-      [user.usuario_id, user.nome, user.login, user.senha, user.atualizado_em]
-    );
-  }
 }
 
 async function findUserByEmail(email) {
@@ -403,64 +275,6 @@ async function findUserByEmail(email) {
     return mainUsers[0];
   }
 
-  if (await tableExists(dbName, "tbUsuarios")) {
-    const [compatUsers] = await pool.query(
-      `
-        SELECT usuario_id AS id, nome, login AS email, senha AS senha_hash
-        FROM ${getCompatUserTable()}
-        WHERE login = ?
-        LIMIT 1
-      `,
-      [normalizedEmail]
-    );
-
-    if (compatUsers[0]) {
-      await synchronizeAuthTables();
-      return compatUsers[0];
-    }
-  }
-
-  if (await tableExists(dbName, "users")) {
-    const [legacyUsers] = await pool.query(
-      `
-        SELECT id, nome, email, senha_hash, criado_em
-        FROM ${getLegacyUsersTable()}
-        WHERE email = ?
-        LIMIT 1
-      `,
-      [normalizedEmail]
-    );
-
-    const legacyUser = legacyUsers[0];
-    if (legacyUser) {
-      const [insertResult] = await pool.query(
-        `
-          INSERT INTO ${getMainUserTable()} (nome, login, senha, atualizado_por)
-          VALUES (?, ?, ?, NULL)
-        `,
-        [legacyUser.nome, legacyUser.email, legacyUser.senha_hash]
-      );
-
-      await pool.query(
-        `
-          UPDATE ${getMainUserTable()}
-          SET atualizado_por = ?, atualizado_em = ?
-          WHERE usuario_id = ?
-        `,
-        [insertResult.insertId, legacyUser.criado_em, insertResult.insertId]
-      );
-
-      await synchronizeAuthTables();
-
-      return {
-        id: insertResult.insertId,
-        nome: legacyUser.nome,
-        email: legacyUser.email,
-        senha_hash: legacyUser.senha_hash
-      };
-    }
-  }
-
   return null;
 }
 
@@ -481,8 +295,6 @@ async function createUser(nome, email, senhaHash) {
     `,
     [result.insertId, result.insertId]
   );
-
-  await synchronizeAuthTables();
 
   return { id: result.insertId, nome, email };
 }
@@ -557,7 +369,6 @@ async function updateUser(userId, nome, email, senha) {
     [nome, email, senhaHash, userId]
   );
 
-  await synchronizeAuthTables();
   return getUserById(userId);
 }
 
@@ -570,14 +381,6 @@ async function deleteUser(userId) {
 
   await pool.query(`UPDATE ${getMainUserTable()} SET atualizado_por = NULL WHERE atualizado_por = ?`, [userId]);
   await pool.query(`DELETE FROM ${getMainUserTable()} WHERE usuario_id = ?`, [userId]);
-
-  if (await tableExists(dbName, "tbUsuarios")) {
-    await pool.query(`DELETE FROM ${getCompatUserTable()} WHERE usuario_id = ?`, [userId]);
-  }
-
-  if (await tableExists(dbName, "users")) {
-    await pool.query(`DELETE FROM ${getLegacyUsersTable()} WHERE id = ?`, [userId]);
-  }
 
   return true;
 }
