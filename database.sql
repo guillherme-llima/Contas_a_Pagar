@@ -10,6 +10,10 @@ CREATE DATABASE IF NOT EXISTS financeiro
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
+CREATE DATABASE IF NOT EXISTS contas_a_pagar
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS financeiro.tbContasReceber;

@@ -104,7 +104,7 @@ const dbHost = isRailway ? requireAnyEnv("DB_HOST", "MYSQLHOST") : getFirstEnv("
 const dbPort = isRailway ? Number(requireAnyEnv("DB_PORT", "MYSQLPORT")) : Number(getFirstEnv("DB_PORT") || 3306);
 const dbUser = isRailway ? requireAnyEnv("DB_USER", "MYSQLUSER") : getFirstEnv("DB_USER") || "root";
 const dbPassword = isRailway ? requireAnyEnv("DB_PASSWORD", "MYSQLPASSWORD") : getFirstEnv("DB_PASSWORD");
-const dbName = getFirstEnv("DB_NAME", "MYSQLDATABASE") || "sistema_contas_pagar";
+const dbName = getFirstEnv("DB_NAME", "MYSQLDATABASE") || "contas_a_pagar";
 const authSecret = process.env.AUTH_SECRET || `${dbUser}:${dbPassword}:${dbHost}`;
 
 const dbConfig = {

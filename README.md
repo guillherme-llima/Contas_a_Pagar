@@ -7,12 +7,13 @@ Sistema inicial de contas a pagar com:
 - login integrado ao banco MySQL
 - home protegida por sessao
 - suporte a MySQL remoto com SSL
+- banco auxiliar `contas_a_pagar`
 
 ## Como executar
 
 1. Abra o terminal na pasta do projeto.
 2. Execute o arquivo `database.sql` no MySQL Workbench para recriar o modelo exatamente como no DER.
-3. Ajuste o arquivo `.env` com o host, porta, usuario, senha e banco do servidor MySQL.
+3. Ajuste o arquivo `.env` com o host, porta, usuario, senha e banco do servidor MySQL. Use `DB_NAME=contas_a_pagar`.
 4. Instale a dependencia:
 
 ```bash
@@ -46,4 +47,4 @@ npm start
 
 ## Observacao
 
-O servidor cria automaticamente os schemas `seguranca`, `cadastro` e `financeiro` e depois aplica as tabelas do modelo atual. Para recriar o banco do zero seguindo o DER, execute primeiro `database.sql`. Para provedores como Aiven, utilize `DB_SSL=true`.
+O servidor cria automaticamente os schemas `seguranca`, `cadastro`, `financeiro` e o banco auxiliar `contas_a_pagar`, depois aplica as tabelas do modelo atual seguindo o DER. Para recriar o banco do zero seguindo o DER, execute primeiro `database.sql`. Para provedores como Aiven, utilize `DB_SSL=true`.
