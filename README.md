@@ -7,7 +7,7 @@ Sistema inicial de contas a pagar com:
 - login integrado ao banco MySQL
 - home protegida por sessao
 - suporte a MySQL remoto com SSL
-- banco auxiliar `contas_a_pagar`
+- banco MySQL unificado em `contas_a_pagar`
 
 ## Como executar
 
@@ -36,7 +36,7 @@ npm start
 - `home.html`: area autenticada
 - `server.js`: servidor HTTP + API de autenticacao
 - `database.sql`: script para executar no MySQL Workbench
-- `primeiro-acesso.sql`: modelo para inserir o primeiro usuario em `seguranca.tbUsuarios`
+- `primeiro-acesso.sql`: modelo para inserir o primeiro usuario em `contas_a_pagar.tbUsuarios`
 - `.env.example`: configuracao de conexao com MySQL
 
 ## API
@@ -47,4 +47,4 @@ npm start
 
 ## Observacao
 
-O servidor cria automaticamente os schemas `seguranca`, `cadastro`, `financeiro` e o banco auxiliar `contas_a_pagar`, depois aplica as tabelas do modelo atual seguindo o DER. Para recriar o banco do zero seguindo o DER, execute primeiro `database.sql`. Para provedores como Aiven, utilize `DB_SSL=true`.
+O servidor cria automaticamente o banco `contas_a_pagar` e aplica nele todas as tabelas do modelo atual seguindo o DER. Para recriar o banco do zero seguindo o DER, execute primeiro `database.sql`. Para provedores como Aiven, utilize `DB_SSL=true`.

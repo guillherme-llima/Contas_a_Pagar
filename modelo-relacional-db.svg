@@ -22,7 +22,7 @@
   </defs>
   <rect width="1100" height="900" class="bg" />
   <text x="34" y="36" class="title">Modelo Relacional do Banco</text>
-  <text x="34" y="58" class="subtitle">Gerado a partir do schema real do MySQL: seguranca, cadastro e financeiro</text>
+  <text x="34" y="58" class="subtitle">Gerado a partir do schema real do MySQL: contas_a_pagar</text>
   
     <path d="M 460 180 C 530 180, 530 400, 600 400" class="rel-line" />
     <text x="472" y="172" text-anchor="start" class="rel-label">1</text>
@@ -54,125 +54,12 @@
     <text x="502" y="657" text-anchor="start" class="rel-label">N</text>
   
   
-    <g id="seguranca.tbUsuarios">
-      <rect x="30" y="70" rx="14" ry="14" width="430" height="240" class="table-shadow" />
-      <rect x="30" y="70" rx="14" ry="14" width="430" height="240" class="table-frame" />
-      <rect x="30" y="70" rx="14" ry="14" width="430" height="24" class="schema-bar" />
-      <rect x="30" y="94" width="430" height="34" class="table-bar" />
-      <text x="245" y="86" text-anchor="middle" class="schema-name">seguranca</text>
-      <text x="44" y="116" class="table-name">tbUsuarios</text>
-      
-      <rect x="30" y="128" width="430" height="28" fill="#ffffff" />
-      <text x="44" y="146" class="col-name">usuario_id</text>
-      <text x="245" y="146" class="col-type">int</text>
-      <text x="446" y="146" text-anchor="end" class="col-meta">PK | NN</text>
-    
-      <rect x="30" y="156" width="430" height="28" fill="#f8fafc" />
-      <text x="44" y="174" class="col-name">nome</text>
-      <text x="245" y="174" class="col-type">varchar(200)</text>
-      <text x="446" y="174" text-anchor="end" class="col-meta">NN</text>
-    
-      <rect x="30" y="184" width="430" height="28" fill="#ffffff" />
-      <text x="44" y="202" class="col-name">login</text>
-      <text x="245" y="202" class="col-type">varchar(50)</text>
-      <text x="446" y="202" text-anchor="end" class="col-meta">UQ | NN</text>
-    
-      <rect x="30" y="212" width="430" height="28" fill="#f8fafc" />
-      <text x="44" y="230" class="col-name">senha</text>
-      <text x="245" y="230" class="col-type">varchar(255)</text>
-      <text x="446" y="230" text-anchor="end" class="col-meta">NN</text>
-    
-      <rect x="30" y="240" width="430" height="28" fill="#ffffff" />
-      <text x="44" y="258" class="col-name">atualizado_em</text>
-      <text x="245" y="258" class="col-type">timestamp</text>
-      <text x="446" y="258" text-anchor="end" class="col-meta">NN</text>
-    
-      <rect x="30" y="268" width="430" height="28" fill="#f8fafc" />
-      <text x="44" y="286" class="col-name">atualizado_por</text>
-      <text x="245" y="286" class="col-type">int</text>
-      <text x="446" y="286" text-anchor="end" class="col-meta">FK</text>
-    
-    </g>
-  
-
-    <g id="cadastro.tbPessoaTipo">
-      <rect x="690" y="40" rx="14" ry="14" width="360" height="128" class="table-shadow" />
-      <rect x="690" y="40" rx="14" ry="14" width="360" height="128" class="table-frame" />
-      <rect x="690" y="40" rx="14" ry="14" width="360" height="24" class="schema-bar" />
-      <rect x="690" y="64" width="360" height="34" class="table-bar" />
-      <text x="870" y="56" text-anchor="middle" class="schema-name">cadastro</text>
-      <text x="704" y="86" class="table-name">tbPessoaTipo</text>
-      
-      <rect x="690" y="98" width="360" height="28" fill="#ffffff" />
-      <text x="704" y="116" class="col-name">pessoa_tipo_id</text>
-      <text x="905" y="116" class="col-type">int</text>
-      <text x="1036" y="116" text-anchor="end" class="col-meta">PK | NN</text>
-    
-      <rect x="690" y="126" width="360" height="28" fill="#f8fafc" />
-      <text x="704" y="144" class="col-name">nome</text>
-      <text x="905" y="144" class="col-type">varchar(200)</text>
-      <text x="1036" y="144" text-anchor="end" class="col-meta">UQ | NN</text>
-    
-    </g>
-  
-
-    <g id="cadastro.tbPessoas">
-      <rect x="600" y="240" rx="14" ry="14" width="450" height="296" class="table-shadow" />
-      <rect x="600" y="240" rx="14" ry="14" width="450" height="296" class="table-frame" />
-      <rect x="600" y="240" rx="14" ry="14" width="450" height="24" class="schema-bar" />
-      <rect x="600" y="264" width="450" height="34" class="table-bar" />
-      <text x="825" y="256" text-anchor="middle" class="schema-name">cadastro</text>
-      <text x="614" y="286" class="table-name">tbPessoas</text>
-      
-      <rect x="600" y="298" width="450" height="28" fill="#ffffff" />
-      <text x="614" y="316" class="col-name">pessoa_id</text>
-      <text x="815" y="316" class="col-type">int</text>
-      <text x="1036" y="316" text-anchor="end" class="col-meta">PK | NN</text>
-    
-      <rect x="600" y="326" width="450" height="28" fill="#f8fafc" />
-      <text x="614" y="344" class="col-name">nome</text>
-      <text x="815" y="344" class="col-type">varchar(200)</text>
-      <text x="1036" y="344" text-anchor="end" class="col-meta">NN</text>
-    
-      <rect x="600" y="354" width="450" height="28" fill="#ffffff" />
-      <text x="614" y="372" class="col-name">cpf</text>
-      <text x="815" y="372" class="col-type">varchar(14)</text>
-      <text x="1036" y="372" text-anchor="end" class="col-meta">UQ | NN</text>
-    
-      <rect x="600" y="382" width="450" height="28" fill="#f8fafc" />
-      <text x="614" y="400" class="col-name">nascimento</text>
-      <text x="815" y="400" class="col-type">date</text>
-      <text x="1036" y="400" text-anchor="end" class="col-meta">NN</text>
-    
-      <rect x="600" y="410" width="450" height="28" fill="#ffffff" />
-      <text x="614" y="428" class="col-name">telefone</text>
-      <text x="815" y="428" class="col-type">varchar(20)</text>
-      <text x="1036" y="428" text-anchor="end" class="col-meta">NN</text>
-    
-      <rect x="600" y="438" width="450" height="28" fill="#f8fafc" />
-      <text x="614" y="456" class="col-name">pessoa_tipo_id</text>
-      <text x="815" y="456" class="col-type">int</text>
-      <text x="1036" y="456" text-anchor="end" class="col-meta">FK | NN</text>
-    
-      <rect x="600" y="466" width="450" height="28" fill="#ffffff" />
-      <text x="614" y="484" class="col-name">atualizado_por</text>
-      <text x="815" y="484" class="col-type">int</text>
-      <text x="1036" y="484" text-anchor="end" class="col-meta">FK</text>
-    
-      <rect x="600" y="494" width="450" height="28" fill="#f8fafc" />
-      <text x="614" y="512" class="col-name">atualizado_em</text>
-      <text x="815" y="512" class="col-type">date</text>
-      <text x="1036" y="512" text-anchor="end" class="col-meta">NN</text>
-    
-    </g>
-  
-
-    <g id="financeiro.tbContasReceber">
+    <g id="contas_a_pagar.tbContasReceber">
       <rect x="40" y="430" rx="14" ry="14" width="450" height="296" class="table-shadow" />
       <rect x="40" y="430" rx="14" ry="14" width="450" height="296" class="table-frame" />
       <rect x="40" y="430" rx="14" ry="14" width="450" height="24" class="schema-bar" />
       <rect x="40" y="454" width="450" height="34" class="table-bar" />
-      <text x="265" y="446" text-anchor="middle" class="schema-name">financeiro</text>
+      <text x="265" y="446" text-anchor="middle" class="schema-name">contas_a_pagar</text>
       <text x="54" y="476" class="table-name">tbContasReceber</text>
       
       <rect x="40" y="488" width="450" height="28" fill="#ffffff" />
@@ -218,12 +105,84 @@
     </g>
   
 
-    <g id="financeiro.tbTipoTitulo">
+    <g id="contas_a_pagar.tbPessoaTipo">
+      <rect x="690" y="40" rx="14" ry="14" width="360" height="128" class="table-shadow" />
+      <rect x="690" y="40" rx="14" ry="14" width="360" height="128" class="table-frame" />
+      <rect x="690" y="40" rx="14" ry="14" width="360" height="24" class="schema-bar" />
+      <rect x="690" y="64" width="360" height="34" class="table-bar" />
+      <text x="870" y="56" text-anchor="middle" class="schema-name">contas_a_pagar</text>
+      <text x="704" y="86" class="table-name">tbPessoaTipo</text>
+      
+      <rect x="690" y="98" width="360" height="28" fill="#ffffff" />
+      <text x="704" y="116" class="col-name">pessoa_tipo_id</text>
+      <text x="905" y="116" class="col-type">int</text>
+      <text x="1036" y="116" text-anchor="end" class="col-meta">PK | NN</text>
+    
+      <rect x="690" y="126" width="360" height="28" fill="#f8fafc" />
+      <text x="704" y="144" class="col-name">nome</text>
+      <text x="905" y="144" class="col-type">varchar(200)</text>
+      <text x="1036" y="144" text-anchor="end" class="col-meta">UQ | NN</text>
+    
+    </g>
+  
+
+    <g id="contas_a_pagar.tbPessoas">
+      <rect x="600" y="240" rx="14" ry="14" width="450" height="296" class="table-shadow" />
+      <rect x="600" y="240" rx="14" ry="14" width="450" height="296" class="table-frame" />
+      <rect x="600" y="240" rx="14" ry="14" width="450" height="24" class="schema-bar" />
+      <rect x="600" y="264" width="450" height="34" class="table-bar" />
+      <text x="825" y="256" text-anchor="middle" class="schema-name">contas_a_pagar</text>
+      <text x="614" y="286" class="table-name">tbPessoas</text>
+      
+      <rect x="600" y="298" width="450" height="28" fill="#ffffff" />
+      <text x="614" y="316" class="col-name">pessoa_id</text>
+      <text x="815" y="316" class="col-type">int</text>
+      <text x="1036" y="316" text-anchor="end" class="col-meta">PK | NN</text>
+    
+      <rect x="600" y="326" width="450" height="28" fill="#f8fafc" />
+      <text x="614" y="344" class="col-name">nome</text>
+      <text x="815" y="344" class="col-type">varchar(200)</text>
+      <text x="1036" y="344" text-anchor="end" class="col-meta">NN</text>
+    
+      <rect x="600" y="354" width="450" height="28" fill="#ffffff" />
+      <text x="614" y="372" class="col-name">cpf</text>
+      <text x="815" y="372" class="col-type">varchar(14)</text>
+      <text x="1036" y="372" text-anchor="end" class="col-meta">UQ | NN</text>
+    
+      <rect x="600" y="382" width="450" height="28" fill="#f8fafc" />
+      <text x="614" y="400" class="col-name">nascimento</text>
+      <text x="815" y="400" class="col-type">date</text>
+      <text x="1036" y="400" text-anchor="end" class="col-meta">NN</text>
+    
+      <rect x="600" y="410" width="450" height="28" fill="#ffffff" />
+      <text x="614" y="428" class="col-name">telefone</text>
+      <text x="815" y="428" class="col-type">varchar(20)</text>
+      <text x="1036" y="428" text-anchor="end" class="col-meta">NN</text>
+    
+      <rect x="600" y="438" width="450" height="28" fill="#f8fafc" />
+      <text x="614" y="456" class="col-name">pessoa_tipo_id</text>
+      <text x="815" y="456" class="col-type">int</text>
+      <text x="1036" y="456" text-anchor="end" class="col-meta">FK | NN</text>
+    
+      <rect x="600" y="466" width="450" height="28" fill="#ffffff" />
+      <text x="614" y="484" class="col-name">atualizado_por</text>
+      <text x="815" y="484" class="col-type">int</text>
+      <text x="1036" y="484" text-anchor="end" class="col-meta">FK</text>
+    
+      <rect x="600" y="494" width="450" height="28" fill="#f8fafc" />
+      <text x="614" y="512" class="col-name">atualizado_em</text>
+      <text x="815" y="512" class="col-type">date</text>
+      <text x="1036" y="512" text-anchor="end" class="col-meta">NN</text>
+    
+    </g>
+  
+
+    <g id="contas_a_pagar.tbTipoTitulo">
       <rect x="720" y="610" rx="14" ry="14" width="320" height="128" class="table-shadow" />
       <rect x="720" y="610" rx="14" ry="14" width="320" height="128" class="table-frame" />
       <rect x="720" y="610" rx="14" ry="14" width="320" height="24" class="schema-bar" />
       <rect x="720" y="634" width="320" height="34" class="table-bar" />
-      <text x="880" y="626" text-anchor="middle" class="schema-name">financeiro</text>
+      <text x="880" y="626" text-anchor="middle" class="schema-name">contas_a_pagar</text>
       <text x="734" y="656" class="table-name">tbTipoTitulo</text>
       
       <rect x="720" y="668" width="320" height="28" fill="#ffffff" />
@@ -235,6 +194,47 @@
       <text x="734" y="714" class="col-name">descricao</text>
       <text x="935" y="714" class="col-type">varchar(100)</text>
       <text x="1026" y="714" text-anchor="end" class="col-meta">UQ | NN</text>
+    
+    </g>
+  
+
+    <g id="contas_a_pagar.tbUsuarios">
+      <rect x="30" y="70" rx="14" ry="14" width="430" height="240" class="table-shadow" />
+      <rect x="30" y="70" rx="14" ry="14" width="430" height="240" class="table-frame" />
+      <rect x="30" y="70" rx="14" ry="14" width="430" height="24" class="schema-bar" />
+      <rect x="30" y="94" width="430" height="34" class="table-bar" />
+      <text x="245" y="86" text-anchor="middle" class="schema-name">contas_a_pagar</text>
+      <text x="44" y="116" class="table-name">tbUsuarios</text>
+      
+      <rect x="30" y="128" width="430" height="28" fill="#ffffff" />
+      <text x="44" y="146" class="col-name">usuario_id</text>
+      <text x="245" y="146" class="col-type">int</text>
+      <text x="446" y="146" text-anchor="end" class="col-meta">PK | NN</text>
+    
+      <rect x="30" y="156" width="430" height="28" fill="#f8fafc" />
+      <text x="44" y="174" class="col-name">nome</text>
+      <text x="245" y="174" class="col-type">varchar(200)</text>
+      <text x="446" y="174" text-anchor="end" class="col-meta">NN</text>
+    
+      <rect x="30" y="184" width="430" height="28" fill="#ffffff" />
+      <text x="44" y="202" class="col-name">login</text>
+      <text x="245" y="202" class="col-type">varchar(50)</text>
+      <text x="446" y="202" text-anchor="end" class="col-meta">UQ | NN</text>
+    
+      <rect x="30" y="212" width="430" height="28" fill="#f8fafc" />
+      <text x="44" y="230" class="col-name">senha</text>
+      <text x="245" y="230" class="col-type">varchar(255)</text>
+      <text x="446" y="230" text-anchor="end" class="col-meta">NN</text>
+    
+      <rect x="30" y="240" width="430" height="28" fill="#ffffff" />
+      <text x="44" y="258" class="col-name">atualizado_em</text>
+      <text x="245" y="258" class="col-type">timestamp</text>
+      <text x="446" y="258" text-anchor="end" class="col-meta">NN</text>
+    
+      <rect x="30" y="268" width="430" height="28" fill="#f8fafc" />
+      <text x="44" y="286" class="col-name">atualizado_por</text>
+      <text x="245" y="286" class="col-type">int</text>
+      <text x="446" y="286" text-anchor="end" class="col-meta">FK</text>
     
     </g>
   

@@ -1,4 +1,4 @@
-INSERT INTO seguranca.tbUsuarios (nome, login, senha, atualizado_por)
+INSERT INTO contas_a_pagar.tbUsuarios (nome, login, senha, atualizado_por)
 VALUES (
   'Administrador FatureMais',
   'admin@faturemais.com',
@@ -9,6 +9,6 @@ ON DUPLICATE KEY UPDATE
   nome = VALUES(nome),
   senha = VALUES(senha);
 
-UPDATE seguranca.tbUsuarios
+UPDATE contas_a_pagar.tbUsuarios
 SET atualizado_por = usuario_id
 WHERE login = 'admin@faturemais.com';

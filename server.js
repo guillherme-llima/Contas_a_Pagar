@@ -120,9 +120,9 @@ const dbConfig = {
 
 let pool;
 const schemas = {
-  seguranca: "seguranca",
-  cadastro: "cadastro",
-  financeiro: "financeiro"
+  seguranca: dbName,
+  cadastro: dbName,
+  financeiro: dbName
 };
 
 function getMainUserTable() {
@@ -236,26 +236,13 @@ async function initializeDatabase() {
     ssl: dbConfig.ssl
   });
 
-  await bootstrapConnection.query(`
-    CREATE DATABASE IF NOT EXISTS \`${schemas.seguranca}\`
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci
-  `);
-  await bootstrapConnection.query(`
-    CREATE DATABASE IF NOT EXISTS \`${schemas.cadastro}\`
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci
-  `);
-  await bootstrapConnection.query(`
-    CREATE DATABASE IF NOT EXISTS \`${schemas.financeiro}\`
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci
-  `);
-  await bootstrapConnection.query(`
-    CREATE DATABASE IF NOT EXISTS \`${dbName}\`
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci
-  `);
+  for (const schema of new Set([...Object.values(schemas), dbName])) {
+    await bootstrapConnection.query(`
+      CREATE DATABASE IF NOT EXISTS \`${schema}\`
+      CHARACTER SET utf8mb4
+      COLLATE utf8mb4_unicode_ci
+    `);
+  }
   await bootstrapConnection.end();
 
   pool = mysql.createPool(dbConfig);
@@ -291,7 +278,7 @@ async function synchronizeAuthTables() {
     await migrateLegacyAuthData();
   }
 
-  if (hasCompatUsers) {
+  if (hasCompatUsers && getCompatUserTable() !== getMainUserTable()) {
     await syncMainUsersToCompatTable();
   }
 
@@ -926,7 +913,7 @@ async function startServer() {
   server.listen(PORT, HOST, () => {
     console.log(`FatureMais disponivel em http://${HOST}:${PORT}`);
     console.log(
-      `MySQL conectado em ${dbConfig.host}:${dbConfig.port} | schemas: ${schemas.seguranca}, ${schemas.cadastro}, ${schemas.financeiro}`
+      `MySQL conectado em ${dbConfig.host}:${dbConfig.port} | database: ${dbName}`
     );
   });
 }

@@ -139,6 +139,7 @@ function drawRelationship(fromLayout, toLayout, options) {
 
 async function fetchSchema() {
   loadEnvFile();
+  const dbName = process.env.DB_NAME || "contas_a_pagar";
 
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST,
@@ -151,16 +152,16 @@ async function fetchSchema() {
   const [tables] = await connection.query(`
     SELECT table_schema, table_name
     FROM information_schema.tables
-    WHERE table_schema IN ('seguranca', 'cadastro', 'financeiro')
-    ORDER BY FIELD(table_schema, 'seguranca', 'cadastro', 'financeiro'), table_name
-  `);
+    WHERE table_schema = ?
+    ORDER BY table_name
+  `, [dbName]);
 
   const [columns] = await connection.query(`
     SELECT table_schema, table_name, column_name, column_type, is_nullable, column_key, extra, ordinal_position
     FROM information_schema.columns
-    WHERE table_schema IN ('seguranca', 'cadastro', 'financeiro')
+    WHERE table_schema = ?
     ORDER BY table_schema, table_name, ordinal_position
-  `);
+  `, [dbName]);
 
   await connection.end();
   return { tables, columns };
@@ -171,11 +172,11 @@ async function main() {
   const tableColumns = buildTableBlocks(columns);
 
   const layouts = {
-    "seguranca.tbUsuarios": { x: 30, y: 70, width: 430 },
-    "cadastro.tbPessoaTipo": { x: 690, y: 40, width: 360 },
-    "cadastro.tbPessoas": { x: 600, y: 240, width: 450 },
-    "financeiro.tbContasReceber": { x: 40, y: 430, width: 450 },
-    "financeiro.tbTipoTitulo": { x: 720, y: 610, width: 320 }
+    "contas_a_pagar.tbUsuarios": { x: 30, y: 70, width: 430 },
+    "contas_a_pagar.tbPessoaTipo": { x: 690, y: 40, width: 360 },
+    "contas_a_pagar.tbPessoas": { x: 600, y: 240, width: 450 },
+    "contas_a_pagar.tbContasReceber": { x: 40, y: 430, width: 450 },
+    "contas_a_pagar.tbTipoTitulo": { x: 720, y: 610, width: 320 }
   };
 
   const tableSvg = tables
@@ -186,7 +187,7 @@ async function main() {
     .join("\n");
 
   const relationshipSvg = [
-    drawRelationship(layouts["seguranca.tbUsuarios"], layouts["cadastro.tbPessoas"], {
+    drawRelationship(layouts["contas_a_pagar.tbUsuarios"], layouts["contas_a_pagar.tbPessoas"], {
       fromSide: "right",
       toSide: "left",
       fromOffsetY: 110,
@@ -194,7 +195,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..N"
     }),
-    drawRelationship(layouts["seguranca.tbUsuarios"], layouts["financeiro.tbContasReceber"], {
+    drawRelationship(layouts["contas_a_pagar.tbUsuarios"], layouts["contas_a_pagar.tbContasReceber"], {
       fromSide: "bottom",
       toSide: "top",
       fromOffsetY: 240,
@@ -202,7 +203,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..N"
     }),
-    drawRelationship(layouts["seguranca.tbUsuarios"], layouts["seguranca.tbUsuarios"], {
+    drawRelationship(layouts["contas_a_pagar.tbUsuarios"], layouts["contas_a_pagar.tbUsuarios"], {
       fromSide: "right",
       toSide: "top",
       fromOffsetY: 150,
@@ -210,7 +211,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..N"
     }),
-    drawRelationship(layouts["cadastro.tbPessoaTipo"], layouts["cadastro.tbPessoas"], {
+    drawRelationship(layouts["contas_a_pagar.tbPessoaTipo"], layouts["contas_a_pagar.tbPessoas"], {
       fromSide: "bottom",
       toSide: "top",
       fromOffsetY: 94,
@@ -218,7 +219,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "N"
     }),
-    drawRelationship(layouts["cadastro.tbPessoas"], layouts["financeiro.tbContasReceber"], {
+    drawRelationship(layouts["contas_a_pagar.tbPessoas"], layouts["contas_a_pagar.tbContasReceber"], {
       fromSide: "left",
       toSide: "right",
       fromOffsetY: 196,
@@ -226,7 +227,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..1"
     }),
-    drawRelationship(layouts["financeiro.tbTipoTitulo"], layouts["financeiro.tbContasReceber"], {
+    drawRelationship(layouts["contas_a_pagar.tbTipoTitulo"], layouts["contas_a_pagar.tbContasReceber"], {
       fromSide: "left",
       toSide: "right",
       fromOffsetY: 70,
@@ -261,7 +262,7 @@ async function main() {
   </defs>
   <rect width="1100" height="900" class="bg" />
   <text x="34" y="36" class="title">Modelo Relacional do Banco</text>
-  <text x="34" y="58" class="subtitle">Gerado a partir do schema real do MySQL: seguranca, cadastro e financeiro</text>
+  <text x="34" y="58" class="subtitle">Gerado a partir do schema real do MySQL: contas_a_pagar</text>
   ${relationshipSvg}
   ${tableSvg}
 </svg>
