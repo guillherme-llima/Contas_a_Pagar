@@ -125,8 +125,16 @@ const schemas = {
   financeiro: dbName
 };
 
+const tableNames = {
+  usuarios: "seguranca.tbUsuarios",
+  pessoaTipo: "tbPessoaTipo",
+  pessoas: "cadastro.tbPessoas",
+  tipoTitulo: "financeiro.tbTipoTitulo",
+  contasReceber: "financeiro.tbContasReceber"
+};
+
 function getMainUserTable() {
-  return `\`${schemas.seguranca}\`.\`tbUsuarios\``;
+  return `\`${dbName}\`.\`${tableNames.usuarios}\``;
 }
 
 function getCompatUserTable() {
@@ -140,7 +148,7 @@ function getLegacyUsersTable() {
 function getSchemaStatements() {
   return [
     `
-      CREATE TABLE IF NOT EXISTS \`${schemas.seguranca}\`.\`tbUsuarios\` (
+      CREATE TABLE IF NOT EXISTS \`${dbName}\`.\`${tableNames.usuarios}\` (
         usuario_id INT(10) NOT NULL AUTO_INCREMENT,
         nome VARCHAR(200) NOT NULL,
         login VARCHAR(50) NOT NULL,
@@ -151,13 +159,13 @@ function getSchemaStatements() {
         UNIQUE KEY uq_tbUsuarios_login (login),
         KEY idx_tbUsuarios_atualizado_por (atualizado_por),
         CONSTRAINT fk_tbUsuarios_atualizado_por
-          FOREIGN KEY (atualizado_por) REFERENCES \`${schemas.seguranca}\`.\`tbUsuarios\` (usuario_id)
+          FOREIGN KEY (atualizado_por) REFERENCES \`${dbName}\`.\`${tableNames.usuarios}\` (usuario_id)
           ON DELETE SET NULL
           ON UPDATE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `,
     `
-      CREATE TABLE IF NOT EXISTS \`${schemas.cadastro}\`.\`tbPessoaTipo\` (
+      CREATE TABLE IF NOT EXISTS \`${dbName}\`.\`${tableNames.pessoaTipo}\` (
         pessoa_tipo_id INT(10) NOT NULL AUTO_INCREMENT,
         nome VARCHAR(200) NOT NULL,
         PRIMARY KEY (pessoa_tipo_id),
@@ -165,7 +173,7 @@ function getSchemaStatements() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `,
     `
-      CREATE TABLE IF NOT EXISTS \`${schemas.cadastro}\`.\`tbPessoas\` (
+      CREATE TABLE IF NOT EXISTS \`${dbName}\`.\`${tableNames.pessoas}\` (
         pessoa_id INT(11) NOT NULL AUTO_INCREMENT,
         nome VARCHAR(200) NOT NULL,
         cpf VARCHAR(14) NOT NULL,
@@ -179,17 +187,17 @@ function getSchemaStatements() {
         KEY idx_tbPessoas_pessoa_tipo_id (pessoa_tipo_id),
         KEY idx_tbPessoas_atualizado_por (atualizado_por),
         CONSTRAINT fk_tbPessoas_pessoa_tipo
-          FOREIGN KEY (pessoa_tipo_id) REFERENCES \`${schemas.cadastro}\`.\`tbPessoaTipo\` (pessoa_tipo_id)
+          FOREIGN KEY (pessoa_tipo_id) REFERENCES \`${dbName}\`.\`${tableNames.pessoaTipo}\` (pessoa_tipo_id)
           ON DELETE RESTRICT
           ON UPDATE CASCADE,
         CONSTRAINT fk_tbPessoas_atualizado_por
-          FOREIGN KEY (atualizado_por) REFERENCES \`${schemas.seguranca}\`.\`tbUsuarios\` (usuario_id)
+          FOREIGN KEY (atualizado_por) REFERENCES \`${dbName}\`.\`${tableNames.usuarios}\` (usuario_id)
           ON DELETE SET NULL
           ON UPDATE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `,
     `
-      CREATE TABLE IF NOT EXISTS \`${schemas.financeiro}\`.\`tbTipoTitulo\` (
+      CREATE TABLE IF NOT EXISTS \`${dbName}\`.\`${tableNames.tipoTitulo}\` (
         tipo_titulo_id INT(11) NOT NULL AUTO_INCREMENT,
         descricao VARCHAR(100) NOT NULL,
         PRIMARY KEY (tipo_titulo_id),
@@ -197,7 +205,7 @@ function getSchemaStatements() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `,
     `
-      CREATE TABLE IF NOT EXISTS \`${schemas.financeiro}\`.\`tbContasReceber\` (
+      CREATE TABLE IF NOT EXISTS \`${dbName}\`.\`${tableNames.contasReceber}\` (
         contas_receber_id INT(10) NOT NULL AUTO_INCREMENT,
         fornecedor_id INT(10) NOT NULL,
         valor INT(10) NOT NULL,
@@ -211,15 +219,15 @@ function getSchemaStatements() {
         KEY idx_tbContasReceber_tipo_titulo_id (tipo_titulo_id),
         KEY idx_tbContasReceber_atualizado_por (atualizado_por),
         CONSTRAINT fk_tbContasReceber_fornecedor
-          FOREIGN KEY (fornecedor_id) REFERENCES \`${schemas.cadastro}\`.\`tbPessoas\` (pessoa_id)
+          FOREIGN KEY (fornecedor_id) REFERENCES \`${dbName}\`.\`${tableNames.pessoas}\` (pessoa_id)
           ON DELETE RESTRICT
           ON UPDATE CASCADE,
         CONSTRAINT fk_tbContasReceber_tipo_titulo
-          FOREIGN KEY (tipo_titulo_id) REFERENCES \`${schemas.financeiro}\`.\`tbTipoTitulo\` (tipo_titulo_id)
+          FOREIGN KEY (tipo_titulo_id) REFERENCES \`${dbName}\`.\`${tableNames.tipoTitulo}\` (tipo_titulo_id)
           ON DELETE RESTRICT
           ON UPDATE CASCADE,
         CONSTRAINT fk_tbContasReceber_atualizado_por
-          FOREIGN KEY (atualizado_por) REFERENCES \`${schemas.seguranca}\`.\`tbUsuarios\` (usuario_id)
+          FOREIGN KEY (atualizado_por) REFERENCES \`${dbName}\`.\`${tableNames.usuarios}\` (usuario_id)
           ON DELETE SET NULL
           ON UPDATE CASCADE
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -251,7 +259,7 @@ async function initializeDatabase() {
     await pool.query(statement);
   }
 
-  await pool.query(`DROP TABLE IF EXISTS \`${schemas.seguranca}\`.\`tbSessoes\``);
+  await pool.query(`DROP TABLE IF EXISTS \`${dbName}\`.\`tbSessoes\``);
 
   await synchronizeAuthTables();
 }

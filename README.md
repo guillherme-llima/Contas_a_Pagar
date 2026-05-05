@@ -36,7 +36,7 @@ npm start
 - `home.html`: area autenticada
 - `server.js`: servidor HTTP + API de autenticacao
 - `database.sql`: script para executar no MySQL Workbench
-- `primeiro-acesso.sql`: modelo para inserir o primeiro usuario em `contas_a_pagar.tbUsuarios`
+- `primeiro-acesso.sql`: modelo para inserir o primeiro usuario em `contas_a_pagar`.`seguranca.tbUsuarios`
 - `.env.example`: configuracao de conexao com MySQL
 
 ## API

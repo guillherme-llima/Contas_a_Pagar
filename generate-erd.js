@@ -172,11 +172,11 @@ async function main() {
   const tableColumns = buildTableBlocks(columns);
 
   const layouts = {
-    "contas_a_pagar.tbUsuarios": { x: 30, y: 70, width: 430 },
+    "contas_a_pagar.seguranca.tbUsuarios": { x: 30, y: 70, width: 430 },
     "contas_a_pagar.tbPessoaTipo": { x: 690, y: 40, width: 360 },
-    "contas_a_pagar.tbPessoas": { x: 600, y: 240, width: 450 },
-    "contas_a_pagar.tbContasReceber": { x: 40, y: 430, width: 450 },
-    "contas_a_pagar.tbTipoTitulo": { x: 720, y: 610, width: 320 }
+    "contas_a_pagar.cadastro.tbPessoas": { x: 600, y: 240, width: 450 },
+    "contas_a_pagar.financeiro.tbContasReceber": { x: 40, y: 430, width: 450 },
+    "contas_a_pagar.financeiro.tbTipoTitulo": { x: 720, y: 610, width: 320 }
   };
 
   const tableSvg = tables
@@ -187,7 +187,7 @@ async function main() {
     .join("\n");
 
   const relationshipSvg = [
-    drawRelationship(layouts["contas_a_pagar.tbUsuarios"], layouts["contas_a_pagar.tbPessoas"], {
+    drawRelationship(layouts["contas_a_pagar.seguranca.tbUsuarios"], layouts["contas_a_pagar.cadastro.tbPessoas"], {
       fromSide: "right",
       toSide: "left",
       fromOffsetY: 110,
@@ -195,7 +195,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..N"
     }),
-    drawRelationship(layouts["contas_a_pagar.tbUsuarios"], layouts["contas_a_pagar.tbContasReceber"], {
+    drawRelationship(layouts["contas_a_pagar.seguranca.tbUsuarios"], layouts["contas_a_pagar.financeiro.tbContasReceber"], {
       fromSide: "bottom",
       toSide: "top",
       fromOffsetY: 240,
@@ -203,7 +203,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..N"
     }),
-    drawRelationship(layouts["contas_a_pagar.tbUsuarios"], layouts["contas_a_pagar.tbUsuarios"], {
+    drawRelationship(layouts["contas_a_pagar.seguranca.tbUsuarios"], layouts["contas_a_pagar.seguranca.tbUsuarios"], {
       fromSide: "right",
       toSide: "top",
       fromOffsetY: 150,
@@ -211,7 +211,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..N"
     }),
-    drawRelationship(layouts["contas_a_pagar.tbPessoaTipo"], layouts["contas_a_pagar.tbPessoas"], {
+    drawRelationship(layouts["contas_a_pagar.tbPessoaTipo"], layouts["contas_a_pagar.cadastro.tbPessoas"], {
       fromSide: "bottom",
       toSide: "top",
       fromOffsetY: 94,
@@ -219,7 +219,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "N"
     }),
-    drawRelationship(layouts["contas_a_pagar.tbPessoas"], layouts["contas_a_pagar.tbContasReceber"], {
+    drawRelationship(layouts["contas_a_pagar.cadastro.tbPessoas"], layouts["contas_a_pagar.financeiro.tbContasReceber"], {
       fromSide: "left",
       toSide: "right",
       fromOffsetY: 196,
@@ -227,7 +227,7 @@ async function main() {
       fromLabel: "1",
       toLabel: "0..1"
     }),
-    drawRelationship(layouts["contas_a_pagar.tbTipoTitulo"], layouts["contas_a_pagar.tbContasReceber"], {
+    drawRelationship(layouts["contas_a_pagar.financeiro.tbTipoTitulo"], layouts["contas_a_pagar.financeiro.tbContasReceber"], {
       fromSide: "left",
       toSide: "right",
       fromOffsetY: 70,

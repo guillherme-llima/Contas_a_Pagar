@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS contas_a_pagar
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS contas_a_pagar.tbUsuarios (
+CREATE TABLE IF NOT EXISTS contas_a_pagar.`seguranca.tbUsuarios` (
   usuario_id INT(10) NOT NULL AUTO_INCREMENT,
   nome VARCHAR(200) NOT NULL,
   login VARCHAR(50) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS contas_a_pagar.tbUsuarios (
   UNIQUE KEY uq_tbUsuarios_login (login),
   KEY idx_tbUsuarios_atualizado_por (atualizado_por),
   CONSTRAINT fk_tbUsuarios_atualizado_por
-    FOREIGN KEY (atualizado_por) REFERENCES contas_a_pagar.tbUsuarios (usuario_id)
+    FOREIGN KEY (atualizado_por) REFERENCES contas_a_pagar.`seguranca.tbUsuarios` (usuario_id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS contas_a_pagar.tbPessoaTipo (
   UNIQUE KEY uq_tbPessoaTipo_nome (nome)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS contas_a_pagar.tbPessoas (
+CREATE TABLE IF NOT EXISTS contas_a_pagar.`cadastro.tbPessoas` (
   pessoa_id INT(11) NOT NULL AUTO_INCREMENT,
   nome VARCHAR(200) NOT NULL,
   cpf VARCHAR(14) NOT NULL,
@@ -43,19 +43,19 @@ CREATE TABLE IF NOT EXISTS contas_a_pagar.tbPessoas (
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
   CONSTRAINT fk_tbPessoas_atualizado_por
-    FOREIGN KEY (atualizado_por) REFERENCES contas_a_pagar.tbUsuarios (usuario_id)
+    FOREIGN KEY (atualizado_por) REFERENCES contas_a_pagar.`seguranca.tbUsuarios` (usuario_id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS contas_a_pagar.tbTipoTitulo (
+CREATE TABLE IF NOT EXISTS contas_a_pagar.`financeiro.tbTipoTitulo` (
   tipo_titulo_id INT(11) NOT NULL AUTO_INCREMENT,
   descricao VARCHAR(100) NOT NULL,
   PRIMARY KEY (tipo_titulo_id),
   UNIQUE KEY uq_tbTipoTitulo_descricao (descricao)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS contas_a_pagar.tbContasReceber (
+CREATE TABLE IF NOT EXISTS contas_a_pagar.`financeiro.tbContasReceber` (
   contas_receber_id INT(10) NOT NULL AUTO_INCREMENT,
   fornecedor_id INT(10) NOT NULL,
   valor INT(10) NOT NULL,
@@ -69,15 +69,15 @@ CREATE TABLE IF NOT EXISTS contas_a_pagar.tbContasReceber (
   KEY idx_tbContasReceber_tipo_titulo_id (tipo_titulo_id),
   KEY idx_tbContasReceber_atualizado_por (atualizado_por),
   CONSTRAINT fk_tbContasReceber_fornecedor
-    FOREIGN KEY (fornecedor_id) REFERENCES contas_a_pagar.tbPessoas (pessoa_id)
+    FOREIGN KEY (fornecedor_id) REFERENCES contas_a_pagar.`cadastro.tbPessoas` (pessoa_id)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
   CONSTRAINT fk_tbContasReceber_tipo_titulo
-    FOREIGN KEY (tipo_titulo_id) REFERENCES contas_a_pagar.tbTipoTitulo (tipo_titulo_id)
+    FOREIGN KEY (tipo_titulo_id) REFERENCES contas_a_pagar.`financeiro.tbTipoTitulo` (tipo_titulo_id)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
   CONSTRAINT fk_tbContasReceber_atualizado_por
-    FOREIGN KEY (atualizado_por) REFERENCES contas_a_pagar.tbUsuarios (usuario_id)
+    FOREIGN KEY (atualizado_por) REFERENCES contas_a_pagar.`seguranca.tbUsuarios` (usuario_id)
     ON DELETE SET NULL
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
