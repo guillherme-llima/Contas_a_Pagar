@@ -440,6 +440,20 @@ input {
   border-radius: 12px;
 }
 
+.app-nav-caret {
+  font-size: 0.9em;
+}
+
+.app-nav-menu-label {
+  display: block;
+  padding: 6px 12px 10px;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .app-nav-menu a:hover,
 .app-nav-menu a.is-active {
   background: rgba(75, 114, 239, 0.12);
@@ -482,6 +496,13 @@ input {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.users-breadcrumb {
+  margin: 0 0 10px;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .users-shell-header h1 {
