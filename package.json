@@ -4,6 +4,7 @@
   "description": "Sistema de contas a pagar com cadastro e login integrados ao MySQL.",
   "main": "server.js",
   "scripts": {
+    "build": "node scripts/build-public.js",
     "start": "node server.js"
   },
   "dependencies": {

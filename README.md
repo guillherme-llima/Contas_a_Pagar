@@ -28,6 +28,36 @@ npm start
 
 6. Acesse `http://localhost:3000`.
 
+## Deploy na Vercel
+
+O projeto agora usa a estrutura esperada pela Vercel:
+
+- `npm run build`: copia os arquivos HTML/CSS/JS para `public/`
+- `public/`: saida estatica usada pela Vercel
+- `api/index.mjs`: funcao serverless para as rotas `/api/*`
+- `vercel.json`: aponta o deploy estatico para `public/` e reescreve `/api/*` para a funcao Node
+
+No painel da Vercel, configure as variaveis de ambiente em **Settings > Environment Variables**:
+
+```bash
+DB_HOST=seu_host_mysql
+DB_PORT=3306
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+DB_NAME=contas_a_pagar
+DB_SSL=true
+AUTH_SECRET=um_texto_grande_e_aleatorio
+```
+
+Como alternativa, voce pode informar uma URL MySQL completa:
+
+```bash
+DATABASE_URL=mysql://usuario:senha@host:3306/contas_a_pagar?ssl=true
+AUTH_SECRET=um_texto_grande_e_aleatorio
+```
+
+Depois de salvar as variaveis, faca um novo deploy. A raiz `/` deve carregar `index.html`, e as chamadas de login/cadastro continuam em `/api/auth/*`.
+
 ## Estrutura
 
 - `index.html`: pagina inicial

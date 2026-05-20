@@ -5,6 +5,7 @@ const crypto = require("node:crypto");
 const mysql = require("mysql2/promise");
 
 const ROOT_DIR = __dirname;
+const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 
 const publicFiles = {
   "/": "index.html",
@@ -25,7 +26,10 @@ const mimeTypes = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
-  ".json": "application/json; charset=utf-8"
+  ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml; charset=utf-8",
+  ".png": "image/png",
+  ".ico": "image/x-icon"
 };
 
 function loadEnvFile() {
@@ -67,6 +71,8 @@ const isRailway =
   Boolean(process.env.RAILWAY_ENVIRONMENT) ||
   Boolean(process.env.RAILWAY_PROJECT_ID) ||
   Boolean(process.env.RAILWAY_STATIC_URL);
+const isVercel = Boolean(process.env.VERCEL) || Boolean(process.env.VERCEL_ENV);
+const isCloud = isRailway || isVercel;
 
 function requireEnv(name) {
   const value = process.env[name]?.trim();
@@ -100,11 +106,67 @@ function requireAnyEnv(...names) {
   return value;
 }
 
-const dbHost = isRailway ? requireAnyEnv("DB_HOST", "MYSQLHOST") : getFirstEnv("DB_HOST") || "127.0.0.1";
-const dbPort = isRailway ? Number(requireAnyEnv("DB_PORT", "MYSQLPORT")) : Number(getFirstEnv("DB_PORT") || 3306);
-const dbUser = isRailway ? requireAnyEnv("DB_USER", "MYSQLUSER") : getFirstEnv("DB_USER") || "root";
-const dbPassword = isRailway ? requireAnyEnv("DB_PASSWORD", "MYSQLPASSWORD") : getFirstEnv("DB_PASSWORD");
-const dbName = "contas_a_pagar";
+function parseDatabaseUrl(value) {
+  if (!value) {
+    return null;
+  }
+
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("DATABASE_URL invalida.");
+  }
+
+  return {
+    host: url.hostname,
+    port: url.port ? Number(url.port) : 3306,
+    user: decodeURIComponent(url.username || ""),
+    password: decodeURIComponent(url.password || ""),
+    database: decodeURIComponent(url.pathname.replace(/^\/+/, "")),
+    ssl: url.searchParams.get("ssl") || url.searchParams.get("sslmode")
+  };
+}
+
+function isSslEnabled(parsedDatabaseUrl) {
+  const sslValue = process.env.DB_SSL?.trim().toLowerCase();
+
+  if (sslValue) {
+    return ["1", "true", "required", "require"].includes(sslValue);
+  }
+
+  const urlSslValue = parsedDatabaseUrl?.ssl?.trim().toLowerCase();
+  return ["1", "true", "required", "require"].includes(urlSslValue);
+}
+
+function resolveDbSettings() {
+  const parsedDatabaseUrl = parseDatabaseUrl(getFirstEnv("DATABASE_URL", "MYSQL_URL", "MYSQL_PUBLIC_URL"));
+  const dbHost = parsedDatabaseUrl?.host || (isCloud ? requireAnyEnv("DB_HOST", "MYSQLHOST") : getFirstEnv("DB_HOST") || "127.0.0.1");
+  const dbPort = parsedDatabaseUrl?.port || Number(isCloud ? requireAnyEnv("DB_PORT", "MYSQLPORT") : getFirstEnv("DB_PORT") || 3306);
+  const dbUser = parsedDatabaseUrl?.user || (isCloud ? requireAnyEnv("DB_USER", "MYSQLUSER") : getFirstEnv("DB_USER") || "root");
+  const dbPassword = parsedDatabaseUrl?.password || (isCloud ? requireAnyEnv("DB_PASSWORD", "MYSQLPASSWORD") : getFirstEnv("DB_PASSWORD"));
+  const dbName = getFirstEnv("DB_NAME", "MYSQLDATABASE") || parsedDatabaseUrl?.database || "contas_a_pagar";
+
+  if (!Number.isFinite(dbPort)) {
+    throw new Error("DB_PORT invalida.");
+  }
+
+  return {
+    host: dbHost,
+    port: dbPort,
+    user: dbUser,
+    password: dbPassword,
+    database: dbName,
+    ssl: isSslEnabled(parsedDatabaseUrl) ? { rejectUnauthorized: false } : undefined
+  };
+}
+
+const dbSettings = resolveDbSettings();
+const dbHost = dbSettings.host;
+const dbPort = dbSettings.port;
+const dbUser = dbSettings.user;
+const dbPassword = dbSettings.password;
+const dbName = dbSettings.database;
 const authSecret = process.env.AUTH_SECRET || `${dbUser}:${dbPassword}:${dbHost}`;
 
 const dbConfig = {
@@ -112,13 +174,14 @@ const dbConfig = {
   port: dbPort,
   user: dbUser,
   password: dbPassword,
-  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : undefined,
+  ssl: dbSettings.ssl,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 };
 
 let pool;
+let initializationPromise;
 const schemas = {
   seguranca: dbName,
   cadastro: dbName,
@@ -252,6 +315,17 @@ async function initializeDatabase() {
   }
 
   await pool.query(`DROP TABLE IF EXISTS \`${dbName}\`.\`tbSessoes\``);
+}
+
+function ensureDatabaseInitialized() {
+  if (!initializationPromise) {
+    initializationPromise = initializeDatabase().catch((error) => {
+      initializationPromise = null;
+      throw error;
+    });
+  }
+
+  return initializationPromise;
 }
 
 async function findUserByEmail(email) {
@@ -391,6 +465,19 @@ function sendJson(response, statusCode, payload) {
 }
 
 function getRequestBody(request) {
+  if (request.body !== undefined && request.body !== null) {
+    if (Buffer.isBuffer(request.body)) {
+      const body = request.body.toString("utf8");
+      return Promise.resolve(body ? JSON.parse(body) : {});
+    }
+
+    if (typeof request.body === "string") {
+      return Promise.resolve(request.body ? JSON.parse(request.body) : {});
+    }
+
+    return Promise.resolve(request.body);
+  }
+
   return new Promise((resolve, reject) => {
     let rawData = "";
 
@@ -519,8 +606,10 @@ function sanitizeUser(user) {
   };
 }
 
-async function handleApi(request, response) {
-  if (request.method === "POST" && request.url === "/api/auth/register") {
+async function handleApi(request, response, requestUrl) {
+  const requestPath = requestUrl.pathname;
+
+  if (request.method === "POST" && requestPath === "/api/auth/register") {
     const body = await getRequestBody(request);
     const nome = body.nome?.trim();
     const email = body.email?.trim().toLowerCase();
@@ -546,7 +635,7 @@ async function handleApi(request, response) {
     return;
   }
 
-  if (request.method === "POST" && request.url === "/api/auth/login") {
+  if (request.method === "POST" && requestPath === "/api/auth/login") {
     const body = await getRequestBody(request);
     const email = body.email?.trim().toLowerCase();
     const senha = body.senha?.trim();
@@ -571,7 +660,7 @@ async function handleApi(request, response) {
     return;
   }
 
-  if (request.method === "GET" && request.url === "/api/auth/me") {
+  if (request.method === "GET" && requestPath === "/api/auth/me") {
     const user = await findUserByToken(request);
 
     if (!user) {
@@ -583,7 +672,7 @@ async function handleApi(request, response) {
     return;
   }
 
-  if (request.url?.startsWith("/api/users")) {
+  if (requestPath.startsWith("/api/users")) {
     const authenticatedUser = await findUserByToken(request);
 
     if (!authenticatedUser) {
@@ -591,7 +680,6 @@ async function handleApi(request, response) {
       return;
     }
 
-    const requestUrl = new URL(request.url, `http://${request.headers.host || "localhost"}`);
     const idMatch = requestUrl.pathname.match(/^\/api\/users\/(\d+)$/);
     const userId = idMatch ? Number(idMatch[1]) : null;
 
@@ -694,32 +782,69 @@ function serveStaticFile(response, filePath) {
   }
 }
 
+function getRequestUrl(request) {
+  const requestUrl = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
+  const rewrittenPath = requestUrl.searchParams.get("path");
+
+  if (requestUrl.pathname === "/api/index" && rewrittenPath) {
+    const normalizedPath = rewrittenPath.replace(/^\/+/, "");
+    requestUrl.pathname = normalizedPath.startsWith("api/")
+      ? `/${normalizedPath}`
+      : `/api/${normalizedPath}`;
+    requestUrl.searchParams.delete("path");
+  }
+
+  return requestUrl;
+}
+
+function getStaticFilePath(asset) {
+  const publicFilePath = path.join(PUBLIC_DIR, asset);
+
+  if (fs.existsSync(publicFilePath)) {
+    return publicFilePath;
+  }
+
+  return path.join(ROOT_DIR, asset);
+}
+
+async function handleRequest(request, response) {
+  try {
+    const requestUrl = getRequestUrl(request);
+
+    if (requestUrl.pathname.startsWith("/api/")) {
+      await ensureDatabaseInitialized();
+      await handleApi(request, response, requestUrl);
+      return;
+    }
+
+    const asset = publicFiles[requestUrl.pathname];
+
+    if (!asset) {
+      sendJson(response, 404, { message: "Arquivo nao encontrado." });
+      return;
+    }
+
+    serveStaticFile(response, getStaticFilePath(asset));
+  } catch (error) {
+    sendJson(response, 500, { message: error.message || "Erro interno do servidor." });
+  }
+}
+
 async function startServer() {
   console.log("Ambiente de execucao:", {
     railway: isRailway,
+    vercel: isVercel,
     port: PORT,
-    dbHost: process.env.DB_HOST || null,
-    dbPort: process.env.DB_PORT || null,
-    dbUser: process.env.DB_USER || null,
-    dbName: process.env.DB_NAME || dbName,
+    dbHost,
+    dbPort,
+    dbUser,
+    dbName,
     dbSsl: process.env.DB_SSL || null
   });
 
-  await initializeDatabase();
+  await ensureDatabaseInitialized();
 
-  const server = http.createServer(async (request, response) => {
-    try {
-      if (request.url?.startsWith("/api/")) {
-        await handleApi(request, response);
-        return;
-      }
-
-      const asset = publicFiles[request.url] || publicFiles["/"];
-      serveStaticFile(response, path.join(ROOT_DIR, asset));
-    } catch (error) {
-      sendJson(response, 500, { message: error.message || "Erro interno do servidor." });
-    }
-  });
+  const server = http.createServer(handleRequest);
 
   server.listen(PORT, HOST, () => {
     console.log(`FatureMais disponivel em http://${HOST}:${PORT}`);
@@ -729,7 +854,14 @@ async function startServer() {
   });
 }
 
-startServer().catch((error) => {
-  console.error("Falha ao iniciar o servidor:", error.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  startServer().catch((error) => {
+    console.error("Falha ao iniciar o servidor:", error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  handleRequest,
+  startServer
+};
